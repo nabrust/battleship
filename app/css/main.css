@@ -1,0 +1,103 @@
+html, body {
+  height: 100%; }
+
+.main-wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%; }
+
+.content {
+  padding-bottom: 100px;
+  margin-bottom: -100px; }
+
+.footer-wrap {
+  height: 100px;
+  margin-top: -100px; }
+
+/* MIXINS */
+.main-header {
+  height: 100px;
+  text-align: center;
+  color: #7878eb;
+  background-color: #84e3da;
+  box-sizing: border-box; }
+
+.main-footer {
+  height: 100px;
+  background-color: #a18dd2;
+  color: #7878eb; }
+
+.sidebar {
+  height: 400px;
+  background-color: #7cd97c;
+  color: #7878eb; }
+
+.content {
+  width: 1000px;
+  min-width: 1000px;
+  background-color: #93dad2;
+  height: 1000px;
+  margin: auto; }
+
+.battlefields {
+  padding: 55px; }
+  .battlefields:before, .battlefields:after {
+    content: "";
+    display: table; }
+  .battlefields:after {
+    clear: both; }
+  .battlefields__my-field {
+    background-image: url(/img/seamwater1.jpeg);
+    float: left; }
+  .battlefields__enemy-field {
+    background-image: url(/img/seamwater1.jpeg);
+    float: right; }
+
+.cell-field {
+  display: inline-block; }
+
+.field-table td {
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  border: solid white 1px;
+  background-color: rgba(255, 255, 255, 0.35);
+  position: relative; }
+.field-table .hat {
+  background-color: inherit;
+  color: white;
+  font-size: 25px; }
+
+.player-name {
+  background-color: red;
+  width: 500px;
+  height: 50px; }
+
+.step {
+  background-color: blue;
+  width: 500px;
+  height: 50px; }
+
+.hit {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto; }
+
+.miss {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: #6a6868;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto; }

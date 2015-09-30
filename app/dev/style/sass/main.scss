@@ -1,0 +1,21 @@
+html,body {
+  height: 100%;
+}
+.main-wrapper {
+  min-height: 100%;
+	height: auto!important;
+	height: 100%;
+}
+.content {
+	padding-bottom: 100px;
+  margin-bottom: -100px;
+}
+.footer-wrap{
+  height: 100px;
+	margin-top: -100px;
+}
+@import "../_misc/_mixins.scss";
+@import "_header.scss";
+@import "_footer.scss";
+@import "_sidebar.scss";
+@import "_content.scss";

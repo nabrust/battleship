@@ -1,0 +1,66 @@
+.content {
+  width: 1000px;
+  min-width: 1000px;
+  background-color: rgb(147,218,210);
+  height: 1000px;
+  margin: auto;
+}
+.battlefields {
+  padding: 55px;
+  @include clearfix;
+  &__my-field {
+    background-image: url(/img/seamwater1.jpeg);
+    float: left;
+  }
+  &__enemy-field {
+    background-image: url(/img/seamwater1.jpeg);
+    float: right;
+  }
+}
+.cell-field {
+  display: inline-block;
+
+}
+.field-table {
+  td {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    border: solid rgb(255,255,255) 1px;
+    background-color: rgba(255,255,255,0.35);
+    position: relative;
+  }
+  .hat {
+    background-color: inherit;
+    color: rgb(255,255,255);
+    font-size: 25px;
+  }
+}
+.player-name {
+  background-color: red;
+  width: 500px;
+  height: 50px;
+}
+.step {
+  background-color: blue;
+  width: 500px;
+  height: 50px;
+}
+.hit {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  left: 0;right: 0;top: 0;bottom: 0;
+  margin: auto;
+}
+.miss {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: rgb(106,104,104);
+  position: absolute;
+  left: 0;right: 0;top: 0;bottom: 0;
+  margin: auto;
+}

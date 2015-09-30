@@ -1,0 +1,28 @@
+extends ../layout/_layout
+block title
+	|Морской бой
+block content
+	main.battlefields
+		section.battlefields__my-field
+			table.field-table
+				tr.table-string.hat
+					each val,index in ['','a','b','c','d','e','f','g','h','i','j']
+						td.hat.table-cell=val
+				-for (var i = 1; i <= 10; i++)
+					tr.table-string
+						td.hat.table-cell=i
+						each cell in ['a','b','c','d','e','f','g','h','i','j']
+							td(id=cell+i).table-cell			
+		section.battlefields__enemy-field
+			table.field-table
+				tr.table-string
+					each val,index in ['','a','b','c','d','e','f','g','h','i','j']
+						td.hat.table-cell=val
+				-for (var i = 1; i <= 10; i++)
+					tr.table-string
+						td.hat.table-cell=i
+						each cell in ['a','b','c','d','e','f','g','h','i','j']
+							td(id=cell+i).table-cell
+	section.information
+		.player-name
+		.step
