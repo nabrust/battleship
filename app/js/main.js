@@ -4,6 +4,8 @@ var battleship = (function(){
 
   //Инициализация функций
   var init = function () {
+    myDisplay();
+    enemyDisplay();
     _setUpListners();
   };
 
@@ -11,8 +13,9 @@ var battleship = (function(){
 
   // Прослушка событий
   var _setUpListners = function () {
-    $('.table-cell').not('.hat').on('click',function () {
-      shipsСreat();
+    $('.battlefields__enemy-field').find('.table-cell').not('.hat').on('click',function () {
+      _view($(this),'fire','enemyDisplay');
+      setTimeout(computerLogic, 1000);
     });
   };
 
@@ -24,31 +27,93 @@ var battleship = (function(){
     numShips = 3,
     shipsLenght = 3,
     shipsKilled = 0,
-    ships = [];
+    myShips = [], // хранит карабли игрока
+    enemuShips = [], // хранить карабли компьютера
+    computerFire = []; // хранит ячейки по которым стрелял компьютер
 
+  // Функция, которая создает игровое поле игрока
+  var myDisplay = function () {
+    shipsСreat('myShips');
+    $('.battlefields__my-field').find('.table-cell').not('.hat').each(function () {
+      _view($(this),'myShips','myDisplay');
+    });
+  };
 
+  var enemyDisplay = function () {
+    shipsСreat('enemuShips');
+    $('.battlefields__enemy-field').find('.table-cell').not('.hat').each(function () {
+      _view($(this),'myShips','enemyDisplay');
+    });
+    console.log(myShips);
+  };
 
+  // Логика компьютера
+  var computerLogic = function () {
+    var
+        fieldCell = $('.battlefields__my-field').find('.table-cell').not('.hat'), // поле игрока
+        nubCell = fieldCell.length, // узнаем количество ячеек
+        selectAim = Math.floor((Math.random() * nubCell)), // выбор ячейки по которой компьютер будет стрелять
+        cell = fieldCell.eq(selectAim), //клетка по которой произведен выстрел
+        cellId = cell.attr('id'),
+        computerflagHit = false,
+        myShipsLenght = myShips.length;
 
-  // Функция срабатывает при выстреле и вроверяет был ли там карабль,
-  // в cell передаем ячейку по которой был произведен выстрел.
-  var _shot = function (cell) {
+    var computerTestHit = function () {
+      for (var i = 0; i < myShips.length; i++) {
+        var test = $.get(myShips[i].location, function (el,n) {
+          if (el === cellId) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        if (checkPos.length !== 0) {
+          computerflagHit = true;
+          break;
+        }
+      }
+    };
+    // if (computerflagHit === true) {
+    //   myShips[myShipsLenght] = cellId;
+    // }
+    _view(cell,'fire','myDisplay');
+  };
 
-    var cellId = cell.attr('id'); //узнаем id клетки
+  // Функция, которая отвечает за показ караблей и показ результата выстрела,
+  // получает ячйку которую нужно проверить cell и режим для маркеров mode
+  var _view = function (cell,mode,display) {
+
+    if (display === 'myDisplay') {
+      var ships = myShips;
+    } else if (display === 'enemyDisplay') {
+      var ships = enemuShips;
+    }
+    var
+        cellId = cell.attr('id'),
+        flagHit = false; //узнаем id клетки
 
     // Проверяем позиции караблей из массива ships на совпадение с позицией
     // по которому стреляли.
-    var checkPos = $.grep(ships[0].location,function (el,n) { // Утилита JQuery, которая обходит каждый элемент массива
-        if (el === cellId) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    // Исходя из результата проверки массива ships ставим метку на квадрат.
-    if (checkPos.length !== 0) {
-      _view(cell,'hit');
-    } else {
-      _view(cell,'miss');
+    for (var i = 0; i < ships.length; i++) {
+      var checkPos = $.grep(ships[i].location,function (el,n) { // Утилита JQuery, которая обходит каждый элемент массива
+          if (el === cellId) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+      // Исходя из результата проверки массива ships ставим метку на квадрат.
+      if (checkPos.length !== 0) {
+        flagHit = true;
+        break;
+      }
+    }
+    if (flagHit === true && mode === 'fire') {
+      _marker('fire',cell,'hit');
+    } else if (flagHit === false && mode === 'fire') {
+      _marker('fire',cell,'miss');
+    } else if (flagHit === true && mode === 'myShips') {
+      _marker('myShips',cell);
     }
   };
 
@@ -57,17 +122,23 @@ var battleship = (function(){
   // Функция, которая ставит метки в ячейку в заисимости от результата выстрела,
   // функция получает ячейку (cell) по которой был произведен выстрел и результат
   // этого выстрела.
-  var _view = function (cell,result) {
-    if (result === 'hit') { // если результат был попаданием то ставим метку с классом "hit"
-      cell.append('<div class="hit"></div>');
-    }else if (result === 'miss') { //если попадания не было то ставим метку с классом "miss"
-      cell.append('<div class="miss"></div>');
+  var _marker = function (mode,cell,result) {
+    if (mode === 'myShips') {
+      cell.append('<div class="showMyShips"></div>');
+    } else if (mode === 'fire') {
+      if (result === 'hit') { // если результат был попаданием то ставим метку с классом "hit"
+        cell.append('<div class="hit"></div>');
+      }else if (result === 'miss') { //если попадания не было то ставим метку с классом "miss"
+        cell.append('<div class="miss"></div>');
+      }
     }
   };
 
 
-
-  var shipsСreat = function () {
+  // Функцияб которая создает карабли
+  var shipsСreat = function (display) {
+      var
+          ships = [];
 
       // Функция, которая рандомно генерирует направление карбля
       var shiDirection = function () {
@@ -136,38 +207,41 @@ var battleship = (function(){
                     }
                   });
                   if (collisionTest.length !== 0) { // Если проверка collisionTest имеет совпадение, то ставим флаг collisionFlag в значение false из внутреннего цикла
-                    console.log('Массив караблей ' + ships[i].location);
-                    console.log('Массив нового карабля ' + shipPos);
-                    console.log('Есть совпадение ' + collisionTest);
                     collisionFlag = false;
                     break;
                   }
                 }
-                if (collisionFlag === false) { // Если функция collisionTest  нашла повторения, то выходим из внешнего цикла
-                  return false;
-                  break;
-                } else { // Если функция collisionTest не нашла повторений, то записываем созданный карабль в массив ships
-                  ships[shipsArrayLength] = {location : shipPos, hits : []};
-                  console.log('------------ Создан ' + (shipsArrayLength + 1) + ' карабль');
-                  console.log(ships);
-                }
               }
-            } else { // если карабли не были созданы ранее то мы добавим новый карабль без проверки массива ships
-              console.log('Первоначальная длина ships ' + ships.length);
+              if (collisionFlag === false) { // Если функция collisionTest  нашла повторения, то выходим из внешнего цикла
+                collisionFlag = true;
+                return false;
+              } else if (collisionFlag === true) { // Если функция collisionTest не нашла повторений, то записываем созданный карабль в массив ships
+                ships[shipsArrayLength] = {location : shipPos, hits : []};
+              }
+            } else if (ships.length === 0 ) {// если карабли не были созданы ранее то мы добавим новый карабль без проверки массива ships
               ships = [{location : shipPos, hits : []}];
-              console.log('Создан первый карабль ' + ships[0].location);
             }
-          };
-          collision();
-        };
-        createShip();
 
-        return ships;
+          };
+          if (collision() === false) {
+            return false;
+          }
+
+        };
+        for (var i = numShips; i > 0;) {
+          if (createShip() !== false) {
+            i--;
+          }
+        }
 
       };
       shipsArray();
 
-
+      if (display === 'myShips') {
+        myShips = ships;
+      }else if (display === 'enemuShips') {
+        enemuShips = ships;
+      }
 
   };
 
