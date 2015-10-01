@@ -47,28 +47,27 @@
   height: 50px;
 }
 .hit {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: red;
+  width: 30px;
+  height: 30px;
+  background-image: url(/img/hit.png);
+  background-repeat: no-repeat;
+  background-position: center;
   position: absolute;
   left: 0;right: 0;top: 0;bottom: 0;
   margin: auto;
 }
 .miss {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: rgb(106,104,104);
+  width: 30px;
+  height: 30px;
+  background-image: url(/img/miss.png);
+  background-repeat: no-repeat;
+  background-position: center;
   position: absolute;
   left: 0;right: 0;top: 0;bottom: 0;
   margin: auto;
 }
-.showMyShips {
-  width: 20px;
-  height: 20px;
-  background-color: rgb(0,55,176);
-  position: absolute;
-  left: 0;right: 0;top: 0;bottom: 0;
-  margin: auto;
+.myShips {
+  background-image: url(/img/blueship.png);
+  background-repeat: no-repeat;
+  background-position: center;
 }

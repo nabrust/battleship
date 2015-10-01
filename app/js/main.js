@@ -28,8 +28,12 @@ var battleship = (function(){
     shipsLenght = 3,
     shipsKilled = 0,
     myShips = [], // хранит карабли игрока
-    enemuShips = [], // хранить карабли компьютера
-    computerFire = []; // хранит ячейки по которым стрелял компьютер
+    enemuShips = [],// хранить карабли компьютера
+    computerHit = [], // массив нужен для того чтобы компьютера запомнил место куда стрелял если было попадание
+    characterArray = ['a','b','c','d','e','f','g','h','i','j'], // массив букв для горизонтали
+//-----------------------НУЖНО СДЕЛАТЬ ФУНКЦИЮ, КОТОРАЯ БУДЕТ СОЗДАВАТЬ ОБЪЕКТ ДЛЯ
+//-----------------------ТОГО ЧТОБЫ КОМПЬТЕР МОГ ЛОГИЧНО СТРЕЛЯТЬ ПОСЛЕ ТОГО КАК
+//-----------------------ОБНАРУЖИЛ КАРАБЛЬ
 
   // Функция, которая создает игровое поле игрока
   var myDisplay = function () {
@@ -44,7 +48,6 @@ var battleship = (function(){
     $('.battlefields__enemy-field').find('.table-cell').not('.hat').each(function () {
       _view($(this),'myShips','enemyDisplay');
     });
-    console.log(myShips);
   };
 
   // Логика компьютера
@@ -52,31 +55,86 @@ var battleship = (function(){
     var
         fieldCell = $('.battlefields__my-field').find('.table-cell').not('.hat'), // поле игрока
         nubCell = fieldCell.length, // узнаем количество ячеек
-        selectAim = Math.floor((Math.random() * nubCell)), // выбор ячейки по которой компьютер будет стрелять
-        cell = fieldCell.eq(selectAim), //клетка по которой произведен выстрел
-        cellId = cell.attr('id'),
-        computerflagHit = false,
-        myShipsLenght = myShips.length;
+        selectAim = Math.floor((Math.random() * nubCell)); // выбор ячейки по которой компьютер будет стрелять
 
-    var computerTestHit = function () {
-      for (var i = 0; i < myShips.length; i++) {
-        var test = $.get(myShips[i].location, function (el,n) {
+    var logicAfterHit = function (cell) {
+      var cellId = cell.attr('id'), // узнаем id ячейки в которую попали
+          num = cellId.replace(/\D+/g, ''), // узнаем горизонталь ячейки
+          character = cellId.replace(/[0-9]/g, ''); // узнаем вертикаль ячейки
+
+      // Функция,которая будет узнавать индекс буквы в массиве characterArray
+      var characterIndex = function () {
+        var index = 0, // переменная, в которую будет сохранен индекс буквы в массиве characterArray
+            j = 0;
+
+        $.grep(characterArray, function (el, n) {
+          if (el === character) {
+            j++;
+            index = n;
+          } else {
+            j++;
+          }
+        });
+
+        return index;
+
+      };
+
+      var searchCell = function () {
+
+      };
+    };
+
+    if (computerHit.length === 0) { // если нужен будет произвольный выстрел
+      var cell = fieldCell.eq(selectAim); //клетка по которой произведен выстрел
+      _view(cell,'fire','myDisplay');
+      if (cell.children().is('.hit')) { // если было попаданиеб то сохраняем эту ячейку и говорим компьютеру делать следующий выстрел
+        saveHit(cell);
+        computerHit[computerHit.length] = cell.attr('id'); // записываем попадание каомпьютера
+        logicAfterHit(cell);
+      }
+    } else if (computerHit.length !== 0) {
+      logicAfterHit(computerHit[0]); // вызываем логику компьютера с первым попаданием
+    }
+
+  };
+
+  // Функция для сохранения попаданий
+  var saveHit = function (cell) {
+    var cellId = cell.attr('id'),
+        shipHitFlag = false;
+    // Функция, которая узнает по какому караблю папали и сохраняет куда попали
+    for (var i = 0; i < myShips.length; i++) {
+      for (var j = 0; j < myShips[i].location.length; j++) {
+        var shipHit = $.grep(myShips[i].location, function (el,n) {
           if (el === cellId) {
             return true;
           } else {
             return false;
           }
         });
-        if (checkPos.length !== 0) {
-          computerflagHit = true;
+        if (shipHit.length !== 0) {
+          shipHitFlag = true;
           break;
         }
       }
-    };
-    // if (computerflagHit === true) {
-    //   myShips[myShipsLenght] = cellId;
-    // }
-    _view(cell,'fire','myDisplay');
+      if (shipHitFlag === true) {
+        break;
+      }
+    }
+    if (shipHitFlag === true) {
+      var hitsArrayLength = myShips[i].hits.length;
+      myShips[i].hits[hitsArrayLength] = cellId; //записываем координату в массив hits для карабля в который попали.
+      kill(myShips[i].hits);// функция для проверки потопления караблей
+    }
+
+  };
+
+  var kill = function (hitsArray) {
+    if (hitsArray.length === shipsLenght) {
+      console.log('Потоплен карабль игрока');
+      console.log(myShips);
+    }
   };
 
   // Функция, которая отвечает за показ караблей и показ результата выстрела,
@@ -89,8 +147,8 @@ var battleship = (function(){
       var ships = enemuShips;
     }
     var
-        cellId = cell.attr('id'),
-        flagHit = false; //узнаем id клетки
+        cellId = cell.attr('id'), //узнаем id клетки
+        flagHit = false; // флагб будет сигнализировать о нахождении карабля
 
     // Проверяем позиции караблей из массива ships на совпадение с позицией
     // по которому стреляли.
@@ -104,27 +162,26 @@ var battleship = (function(){
         });
       // Исходя из результата проверки массива ships ставим метку на квадрат.
       if (checkPos.length !== 0) {
-        flagHit = true;
+        flagHit = true; // ставим флаг на TRUE если был найден карабль
         break;
       }
     }
-    if (flagHit === true && mode === 'fire') {
-      _marker('fire',cell,'hit');
-    } else if (flagHit === false && mode === 'fire') {
-      _marker('fire',cell,'miss');
-    } else if (flagHit === true && mode === 'myShips') {
+    if (flagHit === true && mode === 'fire') { // Если было попадание и стоял стрелятьб
+      _marker('fire',cell,'hit');               // то ставим маркер для попадания
+    } else if (flagHit === false && mode === 'fire') {// Если не было попадание и стоял стрелятьб
+      _marker('fire',cell,'miss');                    // то ставим маркер  попадания нет
+    } else if (flagHit === true && mode === 'myShips') {//Это условие срабатывает если был найден карабль в режиме "Показать мои карабли"
       _marker('myShips',cell);
     }
   };
 
 
-
   // Функция, которая ставит метки в ячейку в заисимости от результата выстрела,
   // функция получает ячейку (cell) по которой был произведен выстрел и результат
-  // этого выстрела.
+  // этого выстрелаб так же получает режим (mode),для подборо нужного маркера
   var _marker = function (mode,cell,result) {
     if (mode === 'myShips') {
-      cell.append('<div class="showMyShips"></div>');
+      cell.addClass('myShips'); // показывает карабли игрока
     } else if (mode === 'fire') {
       if (result === 'hit') { // если результат был попаданием то ставим метку с классом "hit"
         cell.append('<div class="hit"></div>');
@@ -135,7 +192,8 @@ var battleship = (function(){
   };
 
 
-  // Функцияб которая создает карабли
+  // Функция, которая создает карабли, л=она принимает поле в котором нужно
+  // создать карабли.
   var shipsСreat = function (display) {
       var
           ships = [];
@@ -153,13 +211,12 @@ var battleship = (function(){
       // Функция, которая создает координаты караблей
       var position = function (direction) {
         var
-            characterArray = ['a','b','c','d','e','f','g','h','i','j'],
-            location = [],
+            location = [], //переменнаяб которая будет хранить позиции караблей
             i = 0;
 
-        if (direction === 'horizontally') {
+        if (direction === 'horizontally') { // создаем горизонтальный карабль
           var
-            horizontal = Math.floor((Math.random() * (fieldSize - shipsLenght + 1))),
+            horizontal = Math.floor((Math.random() * (fieldSize - shipsLenght + 1))), // вычитаем длинну карабля, для того чтобы карабль не выходил за пределы поля
             vertically = Math.floor((Math.random() * fieldSize) + 1);
 
           for (i; i < shipsLenght; i++) {
@@ -168,9 +225,9 @@ var battleship = (function(){
 
           return location;
 
-        } else if (direction === 'vertically') {
+        } else if (direction === 'vertically') { // создаем вертикальный карабль
           var
-            vertically = Math.floor((Math.random() * (fieldSize - shipsLenght + 1) + 1)),
+            vertically = Math.floor((Math.random() * (fieldSize - shipsLenght + 1) + 1)), // для вертикального карабля, наоборот вычитаем длинну карабля по вертикалиб чтобы карабль не выходил за пределы
             horizontal = Math.floor((Math.random() * fieldSize));
 
           for (i; i < shipsLenght; i++) {
@@ -228,7 +285,7 @@ var battleship = (function(){
           }
 
         };
-        for (var i = numShips; i > 0;) {
+        for (var i = numShips; i > 0;) { // этот цикл вызывает функцию создания караблей до тех пор пока не буду созданы нужное каличество караблейб которые не перекрываются
           if (createShip() !== false) {
             i--;
           }
@@ -237,6 +294,8 @@ var battleship = (function(){
       };
       shipsArray();
 
+
+      // Условие ниже привязывает созданные карабли к определенному полю
       if (display === 'myShips') {
         myShips = ships;
       }else if (display === 'enemuShips') {
