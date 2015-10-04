@@ -1,4 +1,7 @@
 {
-  "name" : "siteName",
-  "version" : "0.1.0"
+  "name": "siteName",
+  "version": "0.1.0",
+  "devDependencies": {
+    "bpopup": "~0.11.0"
+  }
 }

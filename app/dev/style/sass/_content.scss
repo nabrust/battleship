@@ -1,21 +1,25 @@
+body {
+  min-height: 100%;
+  background-image: url(/img/seamwater1.jpeg);
+
+}
 .content {
   width: 1000px;
-  min-width: 1000px;
-  background-color: rgb(147,218,210);
-  height: 1000px;
+  min-height: 100%;
   margin: auto;
 }
 .battlefields {
-  padding: 55px;
+  padding: 55px 55px 40px  55px;
   @include clearfix;
   &__my-field {
-    background-image: url(/img/seamwater1.jpeg);
+    display: inline-block;
     float: left;
   }
   &__enemy-field {
-    background-image: url(/img/seamwater1.jpeg);
+    display: inline-block;
     float: right;
   }
+
 }
 .cell-field {
   display: inline-block;
@@ -35,16 +39,6 @@
     color: rgb(255,255,255);
     font-size: 25px;
   }
-}
-.player-name {
-  background-color: red;
-  width: 500px;
-  height: 50px;
-}
-.step {
-  background-color: blue;
-  width: 500px;
-  height: 50px;
 }
 .hit {
   width: 30px;
@@ -70,4 +64,49 @@
   background-image: url(/img/blueship.png);
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.message {
+  height: 100%;
+  color: rgb(255,255,255);
+  #computerStep {
+  }
+  &__text {
+    display: none;
+    height: 100%;
+    text-align: center;
+    font-size: 25px;
+  }
+}
+.popup-start {
+  width: 700px;
+  overflow: hidden;
+  display: none;
+}
+.input-for-popup{
+  width: 700px;
+  height: 100px;
+  font-size: 75px;
+  text-align: center;
+  border-radius: 25px;
+  margin-bottom: 50px;
+  color: rgb(71,122,252);
+}
+.button-for-popup  {
+  width: 200px;
+  height: 60px;
+  display: block;
+  margin: auto;
+  border-radius: 10px;
+  background-color: rgb(71,122,252);
+  color: rgb(255,255,255);
+  font-size: 25px;
+}
+.poup-end {
+  // background-color: rgb(226,219,194);
+  color: rgb(137,165,235);
+  display: inline-block;
+  font: 25px;
+  display: none;
+
 }

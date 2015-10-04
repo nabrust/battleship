@@ -24,5 +24,17 @@ block content
 						each cell in ['a','b','c','d','e','f','g','h','i','j']
 							td(id=cell+i).table-cell
 	section.information
-		.player-name
-		.step
+			.message
+				#playerStep.message__text
+					h1.message__str
+						|Ваш ход 
+				#computerStep.message__text
+					h1.message__str
+						|Ход противника
+	.popup-start
+		input(type='text' placeholder="Введите свое имя")#inputByPopup.input-for-popup
+		button.button-for-popup Играть
+	.poup-end
+		h1.message-end
+			|Вы победили!
+				

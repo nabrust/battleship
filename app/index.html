@@ -23,11 +23,6 @@
     <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
     <![endif]-->
     <div class="wrap main-wrapper">
-      <div class="row">
-        <header class="large-12 column main-header">
-          <h1>Это шапка сайта</h1>
-        </header>
-      </div>
       <div class="content">
         <main class="battlefields">
           <section class="battlefields__my-field">
@@ -326,19 +321,28 @@
           </section>
         </main>
         <section class="information">
-          <div class="player-name"></div>
-          <div class="step"></div>
+          <div class="message">
+            <div id="playerStep" class="message__text">
+              <h1 class="message__str">Ваш ход </h1>
+            </div>
+            <div id="computerStep" class="message__text">
+              <h1 class="message__str">Ход противника</h1>
+            </div>
+          </div>
         </section>
+        <div class="popup-start">
+          <input type="text" placeholder="Введите свое имя" id="inputByPopup" class="input-for-popup"/>
+          <button class="button-for-popup">Играть</button>
+        </div>
+        <div class="poup-end">
+          <h1 class="message-end">Вы победили!</h1>
+        </div>
       </div>
     </div>
-    <div class="wrap footer-wrapper">
-      <footer class="large-12 column main-footer">
-        <h1>Это футер сайта</h1>
-      </footer>
-    </div><!-- build:js js/vendor.js -->
+    <div class="wrap footer-wrapper"></div><!-- build:js js/vendor.js -->
     <script type="application/javascript" src="/js/vendor/jquery.js"></script>
-    <!--[if lt IE 9]>
-      <script src="http://yastatic.net/jquery/1.9.0/jquery.min.js"></script>
+    <script type="application/javascript" src="/bower/bpopup/jquery.bpopup.js"></script><!--[if lt IE 9]>
+    <script src="http://yastatic.net/jquery/1.9.0/jquery.min.js"></script>
     <![endif]-->
     <script type="application/javascript" src="js/main.js"></script><!-- endbuild -->
     <!-- build:js js/main.js -->
