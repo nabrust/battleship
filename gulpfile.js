@@ -18,7 +18,7 @@ var
 
 
 //___________________Собираем папку DIST (только после компиляции Jade)___________________//
-gulp.task('build', ['clean', 'jade'], function () {
+gulp.task('build', ['clean', 'compileJade'], function () {
   gulp.start('dist');
 });
 

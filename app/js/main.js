@@ -1,16 +1,16 @@
 $(document).ready(function () {
 
-  // var popup = $('.popup-start').bPopup({
-  //      modalClose: false
-  //    });
-  // $('.button-for-popup').on('click',function () {
-  //   var playerName = $('#inputByPopup').val(),
-  //       playerStepText = $('#playerStep').find('.message__str'),
-  //       message = $('#playerStep');
-  //   popup.close();
-  //   playerStepText.text('Ваш ход ' + playerName);
-  //   message.show();
-  // });
+  var popup = $('.popup-start').bPopup({
+       modalClose: false
+     });
+  $('.button-for-popup').on('click',function () {
+    var playerName = $('#inputByPopup').val(),
+        playerStepText = $('#playerStep').find('.message__str'),
+        message = $('#playerStep');
+    popup.close();
+    playerStepText.text('Ваш ход ' + playerName);
+    message.show();
+  });
 
   battleship.init();
 });
@@ -41,7 +41,7 @@ var battleship = (function() {
   var
     forFlahStap = false,
     fieldSize = 10,
-    numShips = 3,
+    numShips = 4,
     shipsLenght = 3,
     playerShipsKilled = 0,
     computerShipsKilled = 0,
@@ -56,16 +56,13 @@ var battleship = (function() {
 
   var funcForClick = function () {
     fire($(this), 'player');
-    // setTimeout(computerLogic, 2000);
-    messageControl('computer');
     $(this).off('click');
+    setTimeout(computerLogic, 1000);
+    messageControl('computer');
     $('.table-cell').off('click');
-    Intervallllllllllllllll = setInterval(computerLogic, 100);
-    console.log('playerShipsKilled');
-    console.log(playerShipsKilled);
-    console.log('computerShipsKilled');
-    console.log(computerShipsKilled);
+    // Intervallllllllllllllll = setInterval(computerLogic, 100);
   };
+
 
   // Создать игровое поле игрока
   var myDisplay = function() {
@@ -75,19 +72,22 @@ var battleship = (function() {
     });
   };
 
-var endPopup = function (message) {
-  var poupEnd = $('.poup-end'),
-      poupEndStr = poupEnd.find('.message-end');
-  poupEndStr.text(message);
-  poupEnd.bPopup({
-    modalClose: false
-  });
-};
 
   // Создать игрово поле компьютера
   var enemyDisplay = function() {
-    shipsСreat('enemuShips');
+      shipsСreat('enemuShips');
   };
+
+
+  var endPopup = function (message) {
+    var poupEnd = $('.poup-end'),
+        poupEndStr = poupEnd.find('.message-end');
+    poupEndStr.text(message);
+    poupEnd.bPopup({
+      modalClose: false
+    });
+  };
+
 
   var messageControl = function (e) {
     var message = $('.message'),
@@ -102,6 +102,7 @@ var endPopup = function (message) {
       playerStep.show();
     }
   };
+
 
   // Логика компьютера
   var computerLogic = function() {
@@ -153,29 +154,13 @@ var endPopup = function (message) {
     var extractCharacters = function(cell) {
       var cellId = cell.attr('id'), // узнаем id ячейки в которую попали
         num = Number(cellId.replace(/\D+/g, '')), // узнаем горизонталь ячейки
-        character = cellId.replace(/[0-9]/g, ''); // узнаем вертикаль ячейки
+        character = cellId.replace(/[0-9]/g, ''), // узнаем вертикаль ячейки
+        characterIndex = characterArray.indexOf(character); // находим индекс буквы
 
-      // Функция,которая будет узнавать индекс буквы в массиве characterArray
-      var characterIndex = function() {
-        var index = 0, // переменная, в которую будет сохранен индекс буквы в массиве characterArray
-          j = 0;
-
-        $.grep(characterArray, function(el, n) {
-          if (el === character) {
-            j++;
-            index = n;
-          } else {
-            j++;
-          }
-        });
-
-        return index;
-
-      };
 
       return {
         num: num,
-        characterIndex: characterIndex()
+        characterIndex: characterIndex
       };
 
     };
@@ -256,8 +241,10 @@ var endPopup = function (message) {
       for (y = 0; findAimFlag === false; y++) {
         findAim();
 
-        if (y > 4) {
+        if (y > shipsLenght) {
+          y = 0;
           fireDirection = ['left','right', 'up', 'down']; // массив направлений для компьютера
+          computerLogicObj = {};
           console.log("обновляю массив");
         }
 
@@ -275,8 +262,8 @@ var endPopup = function (message) {
           // console.log(computerLogicObj);
           // console.log(' ');
           // console.log('+++++++ Отчет +++++++');
-          clearInterval(Intervallllllllllllllll);
-          break;
+          // clearInterval(Intervallllllllllllllll);
+          // break;
         }
       }
 
@@ -304,7 +291,7 @@ var endPopup = function (message) {
       var hitOnShip = myShips[searchingShip()].hits;
 
       // Если попаланий по кораблю было 3, то обнуляем массив computerLogicObj
-      if (hitOnShip.length === 3) {
+      if (hitOnShip.length === shipsLenght) {
         computerLogicObj = {};
 
       }
@@ -365,9 +352,9 @@ var endPopup = function (message) {
           } else if (initiator === 'computer') {
             computerShipsKilled ++;
           }
-          if (computerShipsKilled === 3) {
+          if (computerShipsKilled === numShips) {
             endPopup('Вы проиграли!');
-          } else if (playerShipsKilled === 3) {
+          } else if (playerShipsKilled === numShips) {
             endPopup('Вы победили!');
           }
         }
