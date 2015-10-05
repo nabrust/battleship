@@ -1,6 +1,6 @@
 body {
   min-height: 100%;
-  background-image: url(/img/seamwater1.jpeg);
+  background-image: url(../img/seamwater1.jpeg);
 
 }
 .content {
@@ -43,7 +43,7 @@ body {
 .hit {
   width: 30px;
   height: 30px;
-  background-image: url(/img/hit.png);
+  background-image: url(../img/hit.png);
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;
@@ -53,7 +53,7 @@ body {
 .miss {
   width: 30px;
   height: 30px;
-  background-image: url(/img/miss.png);
+  background-image: url(../img/miss.png);
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;
@@ -61,7 +61,7 @@ body {
   margin: auto;
 }
 .myShips {
-  background-image: url(/img/blueship.png);
+  background-image: url(../img/blueship.png);
   background-repeat: no-repeat;
   background-position: center;
 }

@@ -12,21 +12,23 @@ var
   browserSync = require("browser-sync"), 					// Browser-sync
   clean = require('gulp-clean'),									// удаляет файлы
 	imagemin = require('gulp-imagemin'),						// оптимизация картинок
-	pngquant = require('imagemin-pngquant');				// оптимизация PNG
-
+	size = require('gulp-size'),										// определяет размер
+	plumber = require('gulp-plumber');
 
 
 
 //___________________Собираем папку DIST (только после компиляции Jade)___________________//
-gulp.task('build', ['clean', 'compileJade'], function () {
+gulp.task('build', ['clean'], function () {
   gulp.start('dist');
 });
 
 
 
 //____________________Сборка и вывод размера содержимого папки dist_______________________//
-gulp.task('dist', ['useref', 'ImageMin', 'fonts', 'extras'], function () {
-  return gulp.src('dist/**/*').pipe(size({title: 'build'}));
+gulp.task('dist', ['useref', 'images', 'extras'], function () {
+  return gulp.src('dist/**/*')
+	.pipe(plumber())
+	.pipe(size({title: 'build'}));
 });
 
 
@@ -34,6 +36,7 @@ gulp.task('dist', ['useref', 'ImageMin', 'fonts', 'extras'], function () {
 //__________________________________Перенос шрифтов______________________________________//
 gulp.task('fonts', function() {
   gulp.src('app/fonts/*')
+		.pipe(plumber())
     .pipe(filter(['*.eot','*.svg','*.ttf','*.woff','*.woff2']))
     .pipe(gulp.dest('dist/fonts/'));
 });
@@ -51,15 +54,15 @@ gulp.task('extras', function () {
 
 
 //______________________________________Оптимизация изображений_________________________//
-gulp.task('ImageMin', function () {
-    return gulp.src('./app/img/**/*')
-        .pipe(imagemin({
-            progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()]
-	      }))
-        .pipe(gulp.dest('dist/images'));
+gulp.task('images', function () {
+  return gulp.src('app/img/**/*')
+    .pipe(imagemin({
+      progressive: true,
+      interlaced: true
+    }))
+    .pipe(gulp.dest('dist/img'));
 });
+
 
 
 
@@ -68,6 +71,7 @@ gulp.task('useref', function () {
     var assets = useref.assets();
 
     return gulp.src('./app/*.html')
+				.pipe(plumber())
         .pipe(assets)
         .pipe(gulpif('*.js', uglify()))
         .pipe(gulpif('*.css', minifyCss()))
@@ -89,6 +93,7 @@ gulp.task('clean', function () {
 //____________________________________autoprefixer______________________________________//
 gulp.task('prefixer', function () {
     return gulp.src('./app/css/main.css')
+				.pipe(plumber())
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
             cascade: false
@@ -102,6 +107,7 @@ gulp.task('prefixer', function () {
 gulp.task('compileJade', function() {
 	var YOUR_LOCALS = {};
   gulp.src(['./app/dev/jade/page/*.jade', '!./app/dev/jade/page/_*.jade'])
+		.pipe(plumber())
   	.pipe(jade({
       locals: YOUR_LOCALS,
       pretty: true
