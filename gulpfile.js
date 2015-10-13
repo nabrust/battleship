@@ -2,7 +2,6 @@ var
 	gulp = require('gulp'),
 	rename = require("gulp-rename"), 								// переименовывает файлы
 	notify = require("gulp-notify"), 								// выводит сообщения на экран
-	autoprefixer = require('gulp-autoprefixer'), 		// добавляет префиксы в стилях
 	jade = require('gulp-jade'),										// компилятор JADE
 	sass = require('gulp-ruby-sass'), 							// компилятор SASS
 	useref = require('gulp-useref'),  							// собирает проект для продакшена
@@ -16,8 +15,7 @@ var
 	plumber = require('gulp-plumber');
 
 
-
-//___________________Собираем папку DIST (только после компиляции Jade)___________________//
+//___________________Собираем папку DIST ___________________//
 gulp.task('build', ['clean'], function () {
   gulp.start('dist');
 });
@@ -73,8 +71,6 @@ gulp.task('useref', function () {
     return gulp.src('./app/*.html')
 				.pipe(plumber())
         .pipe(assets)
-        .pipe(gulpif('*.js', uglify()))
-        .pipe(gulpif('*.css', minifyCss()))
         .pipe(assets.restore())
         .pipe(useref())
         .pipe(gulp.dest('dist'));
@@ -87,20 +83,6 @@ gulp.task('clean', function () {
   return gulp.src('dist')
     .pipe(clean());
 });
-
-
-
-//____________________________________autoprefixer______________________________________//
-gulp.task('prefixer', function () {
-    return gulp.src('./app/css/main.css')
-				.pipe(plumber())
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        }))
-        .pipe(gulp.dest('./app/css/main.css'));
-});
-
 
 
 //____________________________________HTML______________________________________________//
@@ -125,8 +107,6 @@ gulp.task('compileSass', function () {
     .pipe(gulp.dest('./app/css'))
 		.pipe(notify("CSS готов!"));
 });
-
-
 
 //__________________________________BROUSER-SYNC________________________________________//
 gulp.task("server", function () {
